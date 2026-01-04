@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { getAllVillagers, Villager } from "./api/api";
-import "./App.css";
 import {
 	Box,
 	Heading,
