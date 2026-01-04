@@ -1,35 +1,95 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import { getAllVillagers, Villager } from "./api/api";
+import "./App.css";
+import {
+	Box,
+	Heading,
+	Text,
+	VStack,
+	Container,
+	Stack,
+	Skeleton,
+	Center,
+} from "@chakra-ui/react";
+import VillagerComboBox from "./components/VillagerComboBox";
+import VillagerCard from "./components/VillagerCard";
 
 function App() {
-  const [count, setCount] = useState(0)
+	const [allVillagers, setAllVillagers] = useState<Villager[]>([]);
+	const [villager, setVillager] = useState<Villager>();
+	const [loading, setLoading] = useState<boolean>(true);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	useEffect(() => {
+		const loadData = async () => {
+			try {
+				const result = await getAllVillagers();
+
+				// Filter out villagers without nh_details or ids
+				const villagersWithNHDetails = result.filter(
+					(villager: Villager) =>
+						villager.nh_details != null && villager.id != ""
+				);
+
+				setAllVillagers(villagersWithNHDetails);
+				setLoading(false);
+			} catch (err) {
+				console.log("Error: ", err);
+			}
+		};
+
+		loadData();
+	}, []);
+
+	return (
+		<Box minH="100vh">
+			<Container maxW="container.lg" p={8} pb={10} textAlign="center">
+				<Heading
+					as="h1"
+					fontSize={{ base: "xl", sm: "2xl", md: "3xl" }}
+					mb={3}
+					color="gray.300"
+				>
+					Animal Crossing: New Horizons Gift Guide
+				</Heading>
+				<Text fontSize={{ base: "md", sm: "lg" }} color="gray.400">
+					Find the perfect gift for your villager!
+				</Text>
+			</Container>
+
+			<Container maxW="container.lg">
+				<Center>
+					<VStack gap={4}>
+						{!loading ? (
+							<VillagerComboBox
+								villagers={allVillagers}
+								setVillager={setVillager}
+							/>
+						) : (
+							<Stack width="200px">
+								<Skeleton height="40px" />
+							</Stack>
+						)}
+
+						{villager && (
+							<VillagerCard
+								key={villager.id}
+								villager={villager}
+							/>
+						)}
+					</VStack>
+				</Center>
+			</Container>
+
+			{/* Footer */}
+			{/* <Box bg="white" borderTop="1px" borderColor="gray.200" mt={12}>
+				<Container maxW="container.lg" py={6}>
+					<Text textAlign="center" fontSize="sm" color="gray.600">
+						© 2026 My App. All rights reserved.
+					</Text>
+				</Container>
+			</Box> */}
+		</Box>
+	);
 }
 
-export default App
+export default App;
