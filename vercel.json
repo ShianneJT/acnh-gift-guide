@@ -1,0 +1,5 @@
+{
+	"rewrites": [
+		{ "source": "/api/nookipedia/(.*)", "destination": "/api/nookipedia" }
+	]
+}
