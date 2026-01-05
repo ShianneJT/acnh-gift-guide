@@ -7,11 +7,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 		return res.status(500).json({ error: "API key not configured" });
 	}
 
-	// Get the path from the request URL (everything after /api/nookipedia)
-	const path = req.url?.replace("/api/nookipedia", "") || "";
+	// Build the full path from the catch-all route
+	const { path } = req.query;
+	const fullPath = Array.isArray(path) ? `/${path.join("/")}` : `/${path}`;
+
+	// Add query string if present
+	const queryString = req.url?.split("?")[1];
+	const apiUrl = queryString
+		? `https://api.nookipedia.com${fullPath}?${queryString}`
+		: `https://api.nookipedia.com${fullPath}`;
 
 	try {
-		const response = await fetch(`https://api.nookipedia.com${path}`, {
+		const response = await fetch(apiUrl, {
 			headers: {
 				"X-API-KEY": apiKey,
 				"Accept-Version": "1.0.0",
