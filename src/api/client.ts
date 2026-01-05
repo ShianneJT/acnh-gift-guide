@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "/api/nookipedia";
+const API_BASE_URL = "/api"; // Change from /api/nookipedia to just /api
 
 export const api = axios.create({
 	baseURL: API_BASE_URL,
@@ -9,15 +9,3 @@ export const api = axios.create({
 		"Content-Type": "application/json",
 	},
 });
-
-api.interceptors.response.use(
-	(response) => response,
-	(error) => {
-		console.error(
-			"API Error:",
-			error.response?.status,
-			error.response?.data
-		);
-		return Promise.reject(error);
-	}
-);
