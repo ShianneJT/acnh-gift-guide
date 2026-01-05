@@ -7,11 +7,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 		return res.status(500).json({ error: "API key not configured" });
 	}
 
-	const { path } = req.query;
-
-	if (!path || typeof path !== "string") {
-		return res.status(400).json({ error: "Path parameter required" });
-	}
+	// Get the path from the request URL (everything after /api/nookipedia)
+	const path = req.url?.replace("/api/nookipedia", "") || "";
 
 	try {
 		const response = await fetch(`https://api.nookipedia.com${path}`, {

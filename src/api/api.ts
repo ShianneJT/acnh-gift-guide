@@ -119,13 +119,11 @@ export interface Availability {
 }
 
 export const getAllVillagers = async (): Promise<Villager[]> => {
-	const response = await api.get<[]>(
-		"/api/nookipedia?path=/villagers?game=nh&nhdetails=true"
-	);
+	const response = await api.get<[]>("/villagers?game=nh&nhdetails=true");
 	return response.data;
 };
 
 export const getAllClothing = async (): Promise<Clothing[]> => {
-	const response = await api.get<[]>("/api/nookipedia?path=/nh/clothing");
+	const response = await api.get<[]>("/nh/clothing");
 	return response.data;
 };

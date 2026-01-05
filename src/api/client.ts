@@ -1,13 +1,10 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://api.nookipedia.com";
-
-const API_KEY = import.meta.env.VITE_API_KEY;
+const API_BASE_URL = "/api/nookipedia";
 
 export const api = axios.create({
 	baseURL: API_BASE_URL,
 	headers: {
-		"X-API-KEY": API_KEY,
 		"Accept-Version": "1.0.0",
 		"Content-Type": "application/json",
 	},
