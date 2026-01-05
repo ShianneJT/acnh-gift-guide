@@ -15,7 +15,7 @@ interface VillagerCardProps {
 
 function VillagerCard({ villager }: VillagerCardProps) {
 	return (
-		<Card.Root flexDirection="row" overflow="hidden" maxW="xl" p={4}>
+		<Card.Root flexDirection="row" overflow="hidden" p={4} width="100%">
 			<Box>
 				<Image
 					objectFit="cover"
@@ -27,24 +27,29 @@ function VillagerCard({ villager }: VillagerCardProps) {
 					{villager.phrase}
 				</Text>
 			</Box>
-			<Box>
-				<Card.Body>
+			<Box flex="1">
+				<Card.Body width="100%">
 					<Card.Title>{villager.name}</Card.Title>
 					<Card.Description>{villager.quote}</Card.Description>
-					<VStack gapY={3} pt={4} align={"start"}>
+					<VStack gapY={3} pt={4} align={"start"} width="100%">
 						<Text textStyle={"sm"}>
-							{`Birthday: ${villager.birthday_month} ${villager.birthday_day}`}
+							Birthday: {villager.birthday_month}{" "}
+							{villager.birthday_day}
 						</Text>
-						<HStack>
+						<HStack width="100%" flexWrap="wrap">
 							<Text textStyle={"sm"}>Favorite Colors:</Text>
 							{villager.nh_details.fav_colors.map((color) => (
-								<Badge variant={"subtle"}>{color}</Badge>
+								<Badge key={color} variant={"subtle"}>
+									{color}
+								</Badge>
 							))}
 						</HStack>
-						<HStack>
+						<HStack width="100%" flexWrap="wrap">
 							<Text textStyle={"sm"}>Favorite Styles:</Text>
 							{villager.nh_details.fav_styles.map((style) => (
-								<Badge variant={"subtle"}>{style}</Badge>
+								<Badge key={style} variant={"subtle"}>
+									{style}
+								</Badge>
 							))}
 						</HStack>
 					</VStack>

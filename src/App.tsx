@@ -57,7 +57,7 @@ function App() {
 
 			<Container maxW="container.lg">
 				<Center>
-					<VStack gap={4}>
+					<VStack gap={4} width="500px">
 						{!loading ? (
 							<VillagerComboBox
 								villagers={allVillagers}
