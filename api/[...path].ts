@@ -7,15 +7,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 		return res.status(500).json({ error: "API key not configured" });
 	}
 
-	// Build the full path from the catch-all route
 	const { path } = req.query;
-	const fullPath = Array.isArray(path) ? `/${path.join("/")}` : `/${path}`;
+	const pathSegments = Array.isArray(path) ? path.join("/") : path || "";
 
-	// Add query string if present
-	const queryString = req.url?.split("?")[1];
+	const urlParts = req.url?.split("?");
+	const queryString = urlParts && urlParts.length > 1 ? urlParts[1] : "";
+
 	const apiUrl = queryString
-		? `https://api.nookipedia.com${fullPath}?${queryString}`
-		: `https://api.nookipedia.com${fullPath}`;
+		? `https://api.nookipedia.com/${pathSegments}?${queryString}`
+		: `https://api.nookipedia.com/${pathSegments}`;
+
+	console.log("Proxying to:", apiUrl);
 
 	try {
 		const response = await fetch(apiUrl, {
@@ -25,9 +27,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 			},
 		});
 
+		if (!response.ok) {
+			throw new Error(`API responded with ${response.status}`);
+		}
+
 		const data = await response.json();
 		res.status(200).json(data);
 	} catch (error) {
+		console.error("Proxy error:", error);
 		res.status(500).json({ error: "Failed to fetch data" });
 	}
 }
