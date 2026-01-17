@@ -128,7 +128,6 @@ function App() {
 								<VillagerCard
 									key={villager.id}
 									villager={villager}
-									onFilterChange={setFilters}
 								/>
 								<SortAndFilter
 									onFilterChange={handleFilterChange}
