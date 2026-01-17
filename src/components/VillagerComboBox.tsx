@@ -10,10 +10,13 @@ import {
 
 interface VillagerComboBoxProps {
 	villagers: Villager[];
-	setVillager: React.Dispatch<React.SetStateAction<Villager | undefined>>;
+	handleVillagerChange: (villager: Villager) => void;
 }
 
-function VillagerComboBox({ villagers, setVillager }: VillagerComboBoxProps) {
+function VillagerComboBox({
+	villagers,
+	handleVillagerChange,
+}: VillagerComboBoxProps) {
 	const { contains } = useFilter({ sensitivity: "base" });
 
 	const villagerItems = villagers.map((v) => ({
@@ -34,7 +37,7 @@ function VillagerComboBox({ villagers, setVillager }: VillagerComboBoxProps) {
 		const villager = selectedItem ? selectedItem.villager : null;
 		if (!villager) return;
 
-		setVillager(villager);
+		handleVillagerChange(villager);
 	};
 
 	return (
