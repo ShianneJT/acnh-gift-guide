@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
 	Box,
 	Heading,
@@ -25,6 +24,10 @@ interface SortAndFilterProps {
 	onSortChange: (option: "name" | "bells" | "poki") => void;
 	onSortOrderChange: (order: "asc" | "desc") => void;
 	isLoading?: boolean;
+	filters: {
+		colors: string[];
+		styles: string[];
+	};
 }
 
 function SortAndFilter({
@@ -35,9 +38,8 @@ function SortAndFilter({
 	onSortChange,
 	onSortOrderChange,
 	isLoading = false,
+	filters,
 }: SortAndFilterProps) {
-	const [selectedColors, setSelectedColors] = useState<string[]>([]);
-	const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
 	const colorOptions = villager?.nh_details?.fav_colors || [];
 	const styleOptions = villager?.nh_details?.fav_styles || [];
 	const sortOptions = createListCollection({
@@ -49,17 +51,13 @@ function SortAndFilter({
 	});
 
 	const handleColorChange = (values: string[]) => {
-		setSelectedColors(values);
-		if (values.length > 0 && selectedStyles.length > 0) {
-			onFilterChange({ colors: values, styles: selectedStyles });
-		}
+		const newFilters = { colors: values, styles: filters.styles };
+		onFilterChange(newFilters);
 	};
 
 	const handleStyleChange = (values: string[]) => {
-		setSelectedStyles(values);
-		if (selectedColors.length > 0 && values.length > 0) {
-			onFilterChange({ colors: selectedColors, styles: values });
-		}
+		const newFilters = { colors: filters.colors, styles: values };
+		onFilterChange(newFilters);
 	};
 
 	const toggleSortOrder = () => {
@@ -92,15 +90,21 @@ function SortAndFilter({
 			</Heading>
 
 			{/* Sorting */}
-			<Flex gap={2} alignItems="center" justifyContent="center" mb={3}>
-				<Box position="relative" width="200px">
+			<Flex
+				gap={2}
+				alignItems="center"
+				justifyContent="center"
+				mb={3}
+				width="100%"
+			>
+				<Box position="relative" flex="1" maxW={{ sm: "200px" }}>
 					<SelectRoot
 						collection={sortOptions}
 						width="full"
 						value={[sortOption]}
 						onValueChange={(e) =>
 							onSortChange(
-								e.value[0] as "name" | "bells" | "poki"
+								e.value[0] as "name" | "bells" | "poki",
 							)
 						}
 						disabled={isLoading}
@@ -124,6 +128,7 @@ function SortAndFilter({
 
 				<IconButton
 					size="sm"
+					flexShrink={0}
 					onClick={toggleSortOrder}
 					variant={sortOrder === "asc" ? "outline" : "solid"}
 				>
@@ -152,11 +157,11 @@ function SortAndFilter({
 						value={color}
 						size="sm"
 						width="100px"
-						checked={selectedColors.includes(color)}
+						checked={filters.colors.includes(color)}
 						onChange={() => {
-							const newColors = selectedColors.includes(color)
-								? selectedColors.filter((c) => c !== color)
-								: [...selectedColors, color];
+							const newColors = filters.colors.includes(color)
+								? filters.colors.filter((c) => c !== color)
+								: [...filters.colors, color];
 							handleColorChange(newColors);
 						}}
 					>
@@ -181,11 +186,11 @@ function SortAndFilter({
 						value={style}
 						size="sm"
 						width="100px"
-						checked={selectedStyles.includes(style)}
+						checked={filters.styles.includes(style)}
 						onChange={() => {
-							const newStyles = selectedStyles.includes(style)
-								? selectedStyles.filter((s) => s !== style)
-								: [...selectedStyles, style];
+							const newStyles = filters.styles.includes(style)
+								? filters.styles.filter((s) => s !== style)
+								: [...filters.styles, style];
 							handleStyleChange(newStyles);
 						}}
 					>

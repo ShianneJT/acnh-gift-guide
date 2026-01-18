@@ -10,7 +10,7 @@ import {
 
 interface VillagerComboBoxProps {
 	villagers: Villager[];
-	handleVillagerChange: (villager: Villager) => void;
+	handleVillagerChange: (villager: Villager | null) => void;
 }
 
 function VillagerComboBox({
@@ -31,13 +31,18 @@ function VillagerComboBox({
 	});
 
 	const handleValueChange = (details: { value: string[] }) => {
-		const selectedItem = collection.items.find(
-			(item) => item.value === details.value[0]
-		);
-		const villager = selectedItem ? selectedItem.villager : null;
-		if (!villager) return;
+		if (details.value.length === 0) {
+			handleVillagerChange(null);
+			return;
+		}
 
-		handleVillagerChange(villager);
+		const selectedItem = collection.items.find(
+			(item) => item.value === details.value[0],
+		);
+
+		if (!selectedItem) return;
+
+		handleVillagerChange(selectedItem.villager);
 	};
 
 	return (
@@ -45,7 +50,8 @@ function VillagerComboBox({
 			collection={collection}
 			onInputValueChange={(e) => filter(e.inputValue)}
 			onValueChange={handleValueChange}
-			width="200px"
+			maxWidth="400px"
+			width="100%"
 			multiple={false}
 		>
 			<Combobox.Control>
@@ -65,7 +71,7 @@ function VillagerComboBox({
 									<Image
 										src={item.villager.nh_details.icon_url}
 										alt={item.villager.name}
-										boxSize="40px"
+										boxSize="60px"
 										objectFit="cover"
 										borderRadius="md"
 									/>

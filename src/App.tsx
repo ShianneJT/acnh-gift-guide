@@ -8,7 +8,6 @@ import {
 	Container,
 	Stack,
 	Skeleton,
-	Center,
 } from "@chakra-ui/react";
 import VillagerComboBox from "./components/VillagerComboBox";
 import VillagerCard from "./components/VillagerCard";
@@ -17,9 +16,8 @@ import SortAndFilter from "./components/SortAndFilter";
 
 function App() {
 	const [allVillagers, setAllVillagers] = useState<Villager[]>([]);
-	const [villager, setVillager] = useState<Villager>();
+	const [villager, setVillager] = useState<Villager | null>();
 	const [allClothing, setAllClothing] = useState<Clothing[]>([]);
-	// const [allFurniture, setAllFurniture] = useState<Clothing[]>([]);
 	const [filters, setFilters] = useState<{
 		colors: string[];
 		styles: string[];
@@ -28,7 +26,7 @@ function App() {
 		styles: [],
 	});
 	const [sortOption, setSortOption] = useState<"name" | "bells" | "poki">(
-		"name"
+		"name",
 	);
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 	const [loading, setLoading] = useState<boolean>(true);
@@ -37,28 +35,27 @@ function App() {
 	useEffect(() => {
 		const loadData = async () => {
 			try {
-				// Run both API calls in parallel
-				const [villagersResult, clothingResult] = await Promise.all([
-					getAllVillagers(),
-					getAllClothing(),
-				]);
+				// -- Villagers --
+				const villagersResult = await getAllVillagers();
 
 				// Filter out villagers without nh_details or ids
 				const villagersWithNHDetails = villagersResult.filter(
 					(villager: Villager) =>
-						villager.nh_details != null && villager.id != ""
+						villager.nh_details != null && villager.id != "",
 				);
-
-				const clothingResultFiltered = clothingResult.filter(
-					(clothing: Clothing) =>
-						clothing.vill_equip && clothing.category !== "Umbrellas"
-				);
-
-				console.log(clothingResultFiltered);
 
 				setAllVillagers(villagersWithNHDetails);
-				setAllClothing(clothingResultFiltered);
 				setLoading(false);
+
+				// -- Clothing --
+				getAllClothing().then((response) => {
+					const clothingResultFiltered = response.filter(
+						(clothing: Clothing) =>
+							clothing.vill_equip &&
+							clothing.category !== "Umbrellas",
+					);
+					setAllClothing(clothingResultFiltered);
+				});
 			} catch (err) {
 				console.log("Error: ", err);
 				setLoading(false);
@@ -67,9 +64,9 @@ function App() {
 		loadData();
 	}, []);
 
-	const handleVillagerChange = (villager: Villager) => {
+	const handleVillagerChange = (villager: Villager | null) => {
 		setVillager(villager);
-		setFilters({ colors: [], styles: [] });
+		resetFilters();
 	};
 
 	const handleFilterChange = (newFilters: {
@@ -93,9 +90,15 @@ function App() {
 		setTimeout(() => setIsFilterLoading(false), 100);
 	};
 
+	const resetFilters = () => {
+		setFilters({ colors: [], styles: [] });
+		setSortOption("name");
+		setSortOrder("asc");
+	};
+
 	return (
 		<Box minH="100vh">
-			<Container maxW="container.lg" p={8} pb={10} textAlign="center">
+			<Container p={8} pb={10} textAlign="center">
 				<Heading
 					as="h1"
 					fontSize={{ base: "xl", sm: "2xl", md: "3xl" }}
@@ -109,40 +112,46 @@ function App() {
 				</Text>
 			</Container>
 
-			<Container maxW="container.lg">
-				<Center>
-					<VStack gap={4}>
-						{!loading ? (
-							<VillagerComboBox
-								villagers={allVillagers}
-								handleVillagerChange={handleVillagerChange}
-							/>
-						) : (
-							<Stack width="200px">
-								<Skeleton height="40px" />
-							</Stack>
-						)}
+			{/* <Container maxWidth="lg">
+				{events && events.length > 0 && (
+					<TodaysEvents events={events} />
+				)}
+			</Container> */}
 
-						{villager && (
-							<>
-								<VillagerCard
-									key={villager.id}
-									villager={villager}
-								/>
-								<SortAndFilter
-									onFilterChange={handleFilterChange}
-									sortOption={sortOption}
-									sortOrder={sortOrder}
-									onSortChange={handleSortChange}
-									onSortOrderChange={handleSortOrderChange}
-									villager={villager}
-									isLoading={isFilterLoading}
-								/>
-							</>
-						)}
-					</VStack>
-				</Center>
+			<Container maxW="container.lg">
+				<VStack gap={4} width="100%">
+					{!loading ? (
+						<VillagerComboBox
+							villagers={allVillagers}
+							handleVillagerChange={handleVillagerChange}
+						/>
+					) : (
+						<Stack width="200px">
+							<Skeleton height="40px" />
+						</Stack>
+					)}
+
+					{villager && (
+						<>
+							<VillagerCard
+								key={villager.id}
+								villager={villager}
+							/>
+							<SortAndFilter
+								onFilterChange={handleFilterChange}
+								sortOption={sortOption}
+								sortOrder={sortOrder}
+								onSortChange={handleSortChange}
+								onSortOrderChange={handleSortOrderChange}
+								villager={villager}
+								isLoading={isFilterLoading}
+								filters={filters}
+							/>
+						</>
+					)}
+				</VStack>
 			</Container>
+
 			{villager && (
 				<>
 					<GiftResults

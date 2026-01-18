@@ -17,12 +17,13 @@ function VillagerCard({ villager }: VillagerCardProps) {
 	return (
 		<>
 			<Card.Root
-				flexDirection="row"
+				flexDirection={{ base: "column", sm: "row" }}
 				overflow="hidden"
 				p={4}
-				width="400px"
+				maxW="400px"
+				width="100%"
 			>
-				<Box>
+				<Box margin="auto">
 					<Image
 						objectFit="cover"
 						maxW="100px"

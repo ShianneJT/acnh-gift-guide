@@ -33,7 +33,7 @@ function GiftResults({
 	isLoading,
 }: GiftResultsProps) {
 	// Check if no filters are selected
-	if (filters.styles.length === 0 && filters.colors.length === 0) {
+	if (filters.styles.length === 0 || filters.colors.length === 0) {
 		return (
 			<Box textAlign="center" py={8}>
 				<Text fontSize="lg" color="gray.600">
@@ -50,7 +50,7 @@ function GiftResults({
 			const hasAllStyles =
 				filters.styles.length === 0 ||
 				filters.styles.every((filterStyle) =>
-					item.styles.includes(filterStyle)
+					item.styles.includes(filterStyle),
 				);
 
 			if (!hasAllStyles) return null;
@@ -59,8 +59,8 @@ function GiftResults({
 				(variation) =>
 					filters.colors.length === 0 ||
 					filters.colors.every((filterColor) =>
-						variation.colors.includes(filterColor)
-					)
+						variation.colors.includes(filterColor),
+					),
 			);
 
 			if (matchingVariations.length === 0) return null;
@@ -121,7 +121,7 @@ function GiftResults({
 
 	return (
 		<Container>
-			<Heading size="lg" mb={4}>
+			<Heading size="lg" my={4}>
 				Gift Results ({filteredClothing.length} items)
 			</Heading>
 			<SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} gap={4}>
@@ -197,7 +197,7 @@ function GiftResults({
 													color="gray.300"
 												>
 													{variation.colors.join(
-														", "
+														", ",
 													)}
 												</Text>
 											</Text>
@@ -280,7 +280,7 @@ function GiftResults({
 								</Link>
 							</Card.Body>
 						</Card.Root>
-					))
+					)),
 				)}
 			</SimpleGrid>
 			{filteredClothing.length === 0 && (
