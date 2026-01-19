@@ -210,6 +210,7 @@ function App() {
 				py={4}
 				fontSize="sm"
 				color="gray.500"
+				px={2}
 			>
 				Built by Shianne Taylor © 2026 • Data from Nookipedia API •{" "}
 				<Link href="https://github.com/ShianneJT" target="_blank">

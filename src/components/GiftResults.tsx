@@ -35,7 +35,7 @@ function GiftResults({
 	// Check if no filters are selected
 	if (filters.styles.length === 0 || filters.colors.length === 0) {
 		return (
-			<Box textAlign="center" py={8}>
+			<Box textAlign="center" py={8} px={2}>
 				<Text fontSize="lg" color="gray.400">
 					Please select at least one color <strong>and</strong> style
 					filter to see gift recommendations.
