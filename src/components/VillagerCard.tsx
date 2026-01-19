@@ -15,14 +15,8 @@ interface VillagerCardProps {
 
 function VillagerCard({ villager }: VillagerCardProps) {
 	return (
-		<>
-			<Card.Root
-				flexDirection={{ base: "column", sm: "row" }}
-				overflow="hidden"
-				p={4}
-				maxW="400px"
-				width="100%"
-			>
+		<Card.Root overflow="hidden" maxW="400px" width="100%" size="sm">
+			<Card.Body flexDirection={{ base: "column", sm: "row" }}>
 				<Box margin="auto">
 					<Image
 						objectFit="cover"
@@ -30,7 +24,7 @@ function VillagerCard({ villager }: VillagerCardProps) {
 						alt={villager.name}
 						src={villager.image_url}
 					/>
-					<Text textAlign={"center"} textStyle={"xs"} pt={2}>
+					<Text textAlign="center" textStyle="xs" pt={2}>
 						{villager.phrase}
 					</Text>
 				</Box>
@@ -38,23 +32,32 @@ function VillagerCard({ villager }: VillagerCardProps) {
 					<Card.Body width="100%">
 						<Card.Title>{villager.name}</Card.Title>
 						<Card.Description>{villager.quote}</Card.Description>
-						<VStack gapY={3} pt={4} align={"start"} width="100%">
-							<Text textStyle={"sm"}>
-								Birthday: {villager.birthday_month}{" "}
-								{villager.birthday_day}
+						<VStack gapY={3} pt={4} align="start" width="100%">
+							<Text>
+								<Text as="span" fontSize="sm" color="gray.200">
+									Birthday:{" "}
+								</Text>
+								<Text as="span" fontSize="xs" color="gray.300">
+									{villager.birthday_month}{" "}
+									{villager.birthday_day}
+								</Text>
 							</Text>
 							<HStack width="100%" flexWrap="wrap">
-								<Text textStyle={"sm"}>Favorite Colors:</Text>
+								<Text textStyle="sm" color="gray.200">
+									Favorite Colors:
+								</Text>
 								{villager.nh_details.fav_colors.map((color) => (
-									<Badge key={color} variant={"subtle"}>
+									<Badge key={color} variant="subtle">
 										{color}
 									</Badge>
 								))}
 							</HStack>
 							<HStack width="100%" flexWrap="wrap">
-								<Text textStyle={"sm"}>Favorite Styles:</Text>
+								<Text textStyle="sm" color="gray.200">
+									Favorite Styles:
+								</Text>
 								{villager.nh_details.fav_styles.map((style) => (
-									<Badge key={style} variant={"subtle"}>
+									<Badge key={style} variant="subtle">
 										{style}
 									</Badge>
 								))}
@@ -62,8 +65,8 @@ function VillagerCard({ villager }: VillagerCardProps) {
 						</VStack>
 					</Card.Body>
 				</Box>
-			</Card.Root>
-		</>
+			</Card.Body>
+		</Card.Root>
 	);
 }
 

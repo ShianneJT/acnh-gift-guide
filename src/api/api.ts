@@ -118,6 +118,13 @@ export interface Availability {
 	note: string;
 }
 
+export interface ACNHEvent {
+	event: string;
+	date: string;
+	type: string;
+	url: string;
+}
+
 export const getAllVillagers = async (): Promise<Villager[]> => {
 	const response = await api.get<[]>("/villagers?game=nh&nhdetails=true");
 	return response.data;
@@ -125,5 +132,12 @@ export const getAllVillagers = async (): Promise<Villager[]> => {
 
 export const getAllClothing = async (): Promise<Clothing[]> => {
 	const response = await api.get<[]>("/nh/clothing");
+	return response.data;
+};
+
+export const getTodaysEvents = async (): Promise<ACNHEvent[]> => {
+	const date = new Date().toLocaleDateString("en-CA");
+
+	const response = await api.get<[]>(`/nh/events?date=${date}`);
 	return response.data;
 };

@@ -50,9 +50,10 @@ function VillagerComboBox({
 			collection={collection}
 			onInputValueChange={(e) => filter(e.inputValue)}
 			onValueChange={handleValueChange}
-			maxWidth="400px"
+			maxW="400px"
 			width="100%"
 			multiple={false}
+			mb={4}
 		>
 			<Combobox.Control>
 				<Combobox.Input placeholder="Enter a Villager Name" />
