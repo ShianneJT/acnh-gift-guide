@@ -45,8 +45,8 @@ function SortAndFilter({
 	const sortOptions = createListCollection({
 		items: [
 			{ label: "Name", value: "name" },
-			{ label: "Bells", value: "bells" },
-			{ label: "Poki", value: "poki" },
+			{ label: "Price (Bells)", value: "bells" },
+			{ label: "Price (Poki)", value: "poki" },
 		],
 	});
 
